@@ -300,51 +300,34 @@ export default class Home extends React.Component {
       return (
         <div id='Home'>
           <h1>Home</h1>
-            <div className="row">
 
-              {/* list management column */}
-              <div className="col-6">
-                <div className="row">
-                  <ListNameSelect
-                    currentListId={currentList.listId}
-                    taskList={allLists}
-                    handleChangeListSelect={this.handleChangeListSelect}
-                  />
-                </div>
-                <div className="row">
-                  <ListNameForm
-                    newListName={newListName}
-                    handleChangeNewListName={this.handleChangeNewListName}
-                    handleSaveList={this.handleSaveList}
-                    handleCangeSwitchToList={this.handleChangeSwitchToList}
-                    switchToList={switchToList}
-                    handleChangeSwitchToList={this.handleChangeSwitchToList}
-                  />
-                </div>
-              </div>
+            <ListNameSelect
+              currentListId={currentList.listId}
+              taskList={allLists}
+              handleChangeListSelect={this.handleChangeListSelect}
+            />
+            <ListNameForm
+              newListName={newListName}
+              handleChangeNewListName={this.handleChangeNewListName}
+              handleSaveList={this.handleSaveList}
+              handleCangeSwitchToList={this.handleChangeSwitchToList}
+              switchToList={switchToList}
+              handleChangeSwitchToList={this.handleChangeSwitchToList}
+            />
 
-              {/* task management column */}
-              <div className="col-6">
-                {this.renderNewTaskForm()}
-              </div>
-
-            </div>{/* end row */}
+            {this.renderNewTaskForm()}
 
 
-          <div className="row">
-            <div className="col-12">
-              <SearchBox
-                searchFilter={searchFilter}
-                handleChangeSearchBox={this.handleChangeSearchBox}
-              />
+            <SearchBox
+              searchFilter={searchFilter}
+              handleChangeSearchBox={this.handleChangeSearchBox}
+            />
 
-              <SearchedTaskList
-                handleFilteredItemClick={this.handleFilteredItemClick}
-                searchFilter={searchFilter}
-                filteredTasks={filteredTasks}
-              />
-            </div>
-          </div>
+            <SearchedTaskList
+              handleFilteredItemClick={this.handleFilteredItemClick}
+              searchFilter={searchFilter}
+              filteredTasks={filteredTasks}
+            />
 
           {this.renderTaskList()}
 

@@ -21,46 +21,38 @@ export default class ListNameForm extends React.Component {
       <div id="ListNameForm">
         <form>
 
-          <div className="">
-            <label htmlFor="listname">Add new list:</label>
-          </div>
+          <label htmlFor="listname">Add new list:</label>
 
-          <div className="">
-            <input
-              name="listname"
-              id="listname"
-              type="text"
-              placeholder="Example: Work Tasks"
-              value={newListName}
-              onChange={this.handleChangeNewListName}
-              className="form-control form-control-sm"
-            />
-          </div>
+          <input
+            name="listname"
+            id="listname"
+            type="text"
+            placeholder="Example: Work Tasks"
+            value={newListName}
+            onChange={this.handleChangeNewListName}
+            className="form-control form-control-sm"
+          />
 
-          <div className="col">
-            <button
-              name="saveList"
-              id="saveList"
-              value="Save"
-              onClick={this.handleSaveList}
-              className="btn btn-sm float-left"
-            >
-              Save
-            </button>
-          </div>
+          <button
+            name="saveList"
+            id="saveList"
+            value="Save"
+            onClick={this.handleSaveList}
+            className="btn btn-sm float-left"
+          >
+            Save
+          </button>
 
-          <div className="form-check form-check-inline">
-            <input
-              name="switchToList"
-              id="switchToList"
-              type="checkbox"
-              value={switchToList}
-              checked={switchToList}
-              onChange={this.handleChangeSwitchToList}
-              className="form-check-input"
-            />
-            <label htmlFor="listname" className="form-check-label">Switch to list?</label>
-          </div>
+          <input
+            name="switchToList"
+            id="switchToList"
+            type="checkbox"
+            value={switchToList}
+            checked={switchToList}
+            onChange={this.handleChangeSwitchToList}
+            className="form-check-input"
+          />
+          <label htmlFor="listname" className="form-check-label">Switch to list?</label>
 
         </form>
       </div>

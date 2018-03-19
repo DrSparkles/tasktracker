@@ -34,25 +34,17 @@ export default class ListNameSelect extends React.Component {
     return (
       <div id="ListNameSelect">
         <form>
-          <div className="form-row">
-            <div className="col">
-              <label htmlFor="listname">Select a list to view:</label>
-            </div>
-          </div>
-          <div className="form-row">
-            <div className="col">
-              <select
-                id="currentlist"
-                name="currentlist"
-                value={this.props.currentListId}
-                className="form-control form-control-sm"
-                onChange={this.handleChangeListSelect}
-              >
-                <option value="">List to view...</option>
-                {listOptions}
-              </select>
-            </div>
-          </div>
+          <label htmlFor="listname">Select a list to view:</label>
+          <select
+            id="currentlist"
+            name="currentlist"
+            value={this.props.currentListId}
+            className="form-control form-control-sm"
+            onChange={this.handleChangeListSelect}
+          >
+            <option value="">List to view...</option>
+            {listOptions}
+          </select>
         </form>
       </div>
     );
