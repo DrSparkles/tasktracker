@@ -14,16 +14,24 @@ export default class SearchBox extends React.Component {
     return (
       <div id="SearchBox">
         <form>
-          <label htmlFor="listname">Search:</label>
-          <input
-            type="text"
-            id="searchtasks"
-            name="searchtasks"
-            value={this.props.searchFilter}
-            onChange={this.handleChangeSearchBox}
-            placeholder="Search Tasks..."
-            className="form-control form-control-sm"
-          />
+          <div className="row">
+            <div className="col">
+              <label htmlFor="listname">Search:</label>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
+              <input
+                type="text"
+                id="searchtasks"
+                name="searchtasks"
+                value={this.props.searchFilter}
+                onChange={this.handleChangeSearchBox}
+                placeholder="Task name..."
+                className="form-control form-control-sm"
+              />
+            </div>
+          </div>
         </form>
       </div>
     );

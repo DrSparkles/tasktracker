@@ -1,9 +1,29 @@
 @import 'css3';
-
+/*
 @background-color: #335C67;
 @content-color: #FFF;
 @primary-accent-color: #540B0E;
 @secondary-accent-color: #9E2A2B;
+
+@background-color: #2E4052;
+@content-color: #FFF;
+@primary-accent-color: #412234;
+@secondary-accent-color: #FFC857;
+
+@background-color: #9a8e15;
+@content-color: #fffeea;
+@primary-accent-color: #120d4d;
+@secondary-accent-color: #9a8e15;
+@table-row-primary-background: #D8DAD3;
+@table-row-secondary-background: #A4C2A5;
+
+*/
+
+@background-color: #193d5a;
+@content-color: #f2f0f0;
+@primary-accent-color: #760000;
+@secondary-accent-color: #ffad00;
+@table-primary-background: #FFF;
 
 body {
     background-color: @background-color;
@@ -17,25 +37,41 @@ a {
     }
 }
 
-div .row {
- border: 1px solid #000;
+h1, h2, h3, h4 {
+  color: @primary-accent-color;
 }
 
-div .col {
-  border: 1px solid red;
+table {
+  background-color: @table-primary-background;
 }
 
-div .col-6 {
-  border: 1px solid green;
+th {
+  color: @primary-accent-color;
 }
 
 .content {
-    padding: 10px;
+  padding: 10px;
 }
 
 .container {
-    background-color: @content-color;
+  background-color: @content-color;
 
+}
+
+.searched-list-names {
+  background-color: @background-color;
+  a {
+    padding: 0 0 0 5px;
+    color: @content-color;
+  }
+}
+
+.searched-task-names {
+  background-color: @secondary-accent-color;
+  a {
+    padding: 0 0 0 20px;
+    color: @primary-accent-color;
+  }
 }
 
 .oi {

@@ -74,8 +74,8 @@ export default class TaskList extends React.Component {
   }
 
   renderTaskDuedateOrInput(task){
-console.log(task);
-    if (this.props.listRegistryStore.editTask !== undefined){
+
+    if (this.props.listRegistryStore.editTask !== undefined && this.props.listRegistryStore.editTask === task.taskId){
       return (
         <div>
           <div className="float-left m-1">

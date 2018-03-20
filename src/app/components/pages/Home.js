@@ -237,18 +237,16 @@ export default class Home extends React.Component {
     if (this.props.listRegistryStore.currentList.listId){
       const { newTaskName, newTaskCompleted, newTaskNotes, newTaskDueDate } = this.props.listRegistryStore;
       return (
-        <div className="col">
-          <TaskForm
-            taskname={newTaskName}
-            completed={newTaskCompleted}
-            taskNotes={newTaskNotes}
-            taskDuedate={newTaskDueDate}
-            handleSaveTask={this.handleSaveTask}
-            handleChangeNewTaskNotes={this.handleChangeNewTaskNotes}
-            handleChangeNewTaskDuedate={this.handleChangeNewTaskDuedate}
-            handleChangeNewTaskName={this.handleChangeNewTaskName}
-          />
-        </div>
+        <TaskForm
+          taskname={newTaskName}
+          completed={newTaskCompleted}
+          taskNotes={newTaskNotes}
+          taskDuedate={newTaskDueDate}
+          handleSaveTask={this.handleSaveTask}
+          handleChangeNewTaskNotes={this.handleChangeNewTaskNotes}
+          handleChangeNewTaskDuedate={this.handleChangeNewTaskDuedate}
+          handleChangeNewTaskName={this.handleChangeNewTaskName}
+        />
       );
     }
     else {
@@ -266,23 +264,20 @@ export default class Home extends React.Component {
   renderTaskList(){
     if (this.props.listRegistryStore.currentList.listId){
       return(
-        <div className="row">
-          <div className="col">
-            <TaskList
-              isLoadingLists={this.props.listRegistryStore.isLoadingLists}
-              currentList={this.props.listRegistryStore.currentList}
-              handleSaveList={this.handleSaveList}
-              handleSaveTask={this.handleSaveTask}
-              handleChangeListName={this.handleChangeListName}
-              handleChangeTaskName={this.handleChangeTaskName}
-              handleChangeTaskNotes={this.handleChangeTaskNotes}
-              handleChangeTaskDuedate={this.handleChangeTaskDuedate}
-              handleMarkTaskComplete={this.handleMarkTaskComplete}
-              handleDeleteTask={this.handleDeleteTask}
-              handleDeleteList={this.handleDeleteList}
-            />
-          </div>
-        </div>
+        <TaskList
+          isLoadingLists={this.props.listRegistryStore.isLoadingLists}
+          currentList={this.props.listRegistryStore.currentList}
+          handleSaveList={this.handleSaveList}
+          handleSaveTask={this.handleSaveTask}
+          handleChangeListName={this.handleChangeListName}
+          handleChangeTaskName={this.handleChangeTaskName}
+          handleChangeTaskNotes={this.handleChangeTaskNotes}
+          handleChangeTaskDuedate={this.handleChangeTaskDuedate}
+          handleMarkTaskComplete={this.handleMarkTaskComplete}
+          handleDeleteTask={this.handleDeleteTask}
+          handleDeleteList={this.handleDeleteList}
+
+        />
       );
     }
     else {
@@ -299,37 +294,55 @@ export default class Home extends React.Component {
     if (this.props.userStore.currentUser && !isLoading){
       return (
         <div id='Home'>
-          <h1>Home</h1>
 
-            <ListNameSelect
-              currentListId={currentList.listId}
-              taskList={allLists}
-              handleChangeListSelect={this.handleChangeListSelect}
-            />
-            <ListNameForm
-              newListName={newListName}
-              handleChangeNewListName={this.handleChangeNewListName}
-              handleSaveList={this.handleSaveList}
-              handleCangeSwitchToList={this.handleChangeSwitchToList}
-              switchToList={switchToList}
-              handleChangeSwitchToList={this.handleChangeSwitchToList}
-            />
+          <div className="row">
+            <div className="col">
 
-            {this.renderNewTaskForm()}
+              <ListNameSelect
+                currentListId={currentList.listId}
+                taskList={allLists}
+                handleChangeListSelect={this.handleChangeListSelect}
+              />
 
+              <ListNameForm
+                newListName={newListName}
+                handleChangeNewListName={this.handleChangeNewListName}
+                handleSaveList={this.handleSaveList}
+                handleCangeSwitchToList={this.handleChangeSwitchToList}
+                switchToList={switchToList}
+                handleChangeSwitchToList={this.handleChangeSwitchToList}
+              />
 
-            <SearchBox
-              searchFilter={searchFilter}
-              handleChangeSearchBox={this.handleChangeSearchBox}
-            />
+            </div>
+            <div className="col">
+              {this.renderNewTaskForm()}
+            </div>
+          </div>
 
-            <SearchedTaskList
-              handleFilteredItemClick={this.handleFilteredItemClick}
-              searchFilter={searchFilter}
-              filteredTasks={filteredTasks}
-            />
+          <div className="row mt-2">
+            <div className="col">
+              <SearchBox
+                searchFilter={searchFilter}
+                handleChangeSearchBox={this.handleChangeSearchBox}
+              />
+            </div>
+          </div>
 
-          {this.renderTaskList()}
+          <div className="row">
+            <div className="col">
+              <SearchedTaskList
+                handleFilteredItemClick={this.handleFilteredItemClick}
+                searchFilter={searchFilter}
+                filteredTasks={filteredTasks}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              {this.renderTaskList()}
+            </div>
+          </div>
 
         </div>
       );

@@ -30,22 +30,28 @@ export default class TaskList extends React.Component {
   renderListNameOrEditField(){
     if (this.props.listRegistryStore.editList){
       return (
-        <div>
-          <input
-            name="taskname"
-            id="taskname"
-            type="text"
-            value={this.props.currentList.listname}
-            onChange={this.handleChangeListName}
-            className="form-control form-control-sm"
-          />
-          <span className="oi oi-check" title="Save" aria-hidden="true" onClick={this.handleSaveList} />
+        <div className="mt-2">
+          <div className="row">
+            <div className="col">
+              <input
+                name="taskname"
+                id="taskname"
+                type="text"
+                value={this.props.currentList.listname}
+                onChange={this.handleChangeListName}
+                className="form-control form-control-sm"
+              />
+            </div>
+            <div className="col">
+              <span className="oi oi-check" title="Save" aria-hidden="true" onClick={this.handleSaveList} />
+            </div>
+          </div>
         </div>
       );
     }
     else {
       return (
-        <div>
+        <div className="mt-2">
           <h3 className="float-left">{this.props.currentList.listname}</h3>
           <div className="float-left m-1">
             <span className="oi oi-pencil" title="Edit" aria-hidden="true" onClick={this.toggleEdit.bind(this, this.props.currentList.listId)} />
@@ -86,7 +92,7 @@ export default class TaskList extends React.Component {
       return (
         <div id="TaskList">
           {this.renderListNameOrEditField()}
-          <table className="table table-sm table-striped">
+          <table className="table table-sm table-striped mt-2">
             <thead>
               <tr>
                 <th>Task</th>
