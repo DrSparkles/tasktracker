@@ -27,7 +27,7 @@ class CommonStore {
    * Format string for dates, per the moment.js library
    * @type {string}
    */
-  @observable datetimeFormat = 'YYYY-MM-DD HH:mm';
+  @observable datetimeFormat = 'YYYY-MM-DD';
 
   /**
    * Set up critical app sate

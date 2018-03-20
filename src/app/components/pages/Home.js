@@ -3,6 +3,7 @@
  */
 
 import React from "react";
+import moment from "moment";
 
 import { inject, observer } from 'mobx-react';
 import ListNameForm from "../../components/ListNameForm";
@@ -12,7 +13,7 @@ import TaskList from "../../components/TaskList";
 import SearchBox from "../SearchBox/SearchBox";
 import SearchedTaskList from "../SearchedTaskList/SearchedTaskList";
 
-@inject('userStore', 'listRegistryStore')
+@inject('commonStore', 'userStore', 'listRegistryStore')
 @observer
 export default class Home extends React.Component {
 
@@ -73,6 +74,14 @@ export default class Home extends React.Component {
    */
   handleSaveList = (ev) => {
     ev.preventDefault();
+
+    // do not allow saving if the fields are blank
+    // visual differentiation on the save button would be handy...
+    const listname = this.props.listRegistryStore.newListName || this.props.listRegistryStore.currentList.listname;
+    if (listname === ""){
+      return false;
+    }
+
     this.props.listRegistryStore.saveList()
       // this isn't loading when I expect; needs sorting out!
       .then(() => {
@@ -125,6 +134,20 @@ export default class Home extends React.Component {
    * @param ev
    */
   handleSaveTask = (ev) => {
+
+    // cannot save without a task name
+    const taskname = this.props.listRegistryStore.newTaskName || this.props.listRegistryStore.currentTask.taskname;
+    if (taskname === ""){
+      return false;
+    }
+
+    // cannot save with the wrong date format
+    const datetime = this.props.listRegistryStore.newTaskDueDate || this.props.listRegistryStore.currentTask.duedate;
+    const dateFormat = this.props.commonStore.datetimeFormat;
+    if (datetime !== "" && moment(datetime, dateFormat, true).isValid() === false){
+      return false;
+    }
+
     this.props.listRegistryStore.saveTask()
   };
 
@@ -246,6 +269,7 @@ export default class Home extends React.Component {
           handleChangeNewTaskNotes={this.handleChangeNewTaskNotes}
           handleChangeNewTaskDuedate={this.handleChangeNewTaskDuedate}
           handleChangeNewTaskName={this.handleChangeNewTaskName}
+          dateformat={this.props.commonStore.datetimeFormat}
         />
       );
     }
@@ -276,7 +300,7 @@ export default class Home extends React.Component {
           handleMarkTaskComplete={this.handleMarkTaskComplete}
           handleDeleteTask={this.handleDeleteTask}
           handleDeleteList={this.handleDeleteList}
-
+          dateformat={this.props.commonStore.datetimeFormat}
         />
       );
     }

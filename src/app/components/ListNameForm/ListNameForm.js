@@ -1,7 +1,5 @@
-import { Link } from 'react-router-dom';
-import ListErrors from '../ListErrors';
 import React from 'react';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 
 /**
  * List name form for saving and editing lists

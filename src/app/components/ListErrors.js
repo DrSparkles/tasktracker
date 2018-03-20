@@ -10,7 +10,7 @@ class ListErrors extends React.Component {
       // handle arrays of errors
       if (Array.isArray(errors)){
         return (
-          <ul className="error-messages">
+          <ul className="text-danger">
             {
               Object.keys(errors).map(key => {
                 return (
@@ -27,7 +27,7 @@ class ListErrors extends React.Component {
       // handle a single string error
       else {
         return (
-          <ul className="error-messages">
+          <ul className="text-danger">
             <li>
               {errors}
             </li>

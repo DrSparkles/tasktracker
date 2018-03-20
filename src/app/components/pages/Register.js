@@ -15,17 +15,49 @@ const btnStyle = {
 @observer
 export default class Register extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      passwordValidationClass: "form-control form-control-sm",
+      passwordValidationField: ""
+    };
+  }
+
   /**
    * Clear the user fields when the form is done
    */
   componentWillUnmount() {
     this.props.authStore.reset();
+    this.setState({
+      passwordValidationClass: "form-control form-control-sm",
+      passwordValidationField: ""
+    });
   }
 
-  handleUsernameChange = e => this.props.authStore.setUsername(e.target.value);
-  handlePasswordChange = e => this.props.authStore.setPassword(e.target.value);
-  handleSubmitForm = (e) => {
-    e.preventDefault();
+  handleUsernameChange = (ev) => {
+    this.props.authStore.setUsername(ev.target.value);
+  };
+
+  handlePasswordChange = (ev) => {
+    this.props.authStore.setPassword(ev.target.value);
+  };
+
+  handlePasswordCheckChange = (ev) => {
+    const fieldValue = ev.target.value;
+    this.setState({passwordValidationField: fieldValue});
+
+    // set default class and handle class change as the field changes...
+    // if the password validation check doesn't match the original password, set input to invalid
+    let passwordValidationClass = "form-control form-control-sm";
+    if (fieldValue !== "" && fieldValue !== this.props.authStore.values.password){
+      passwordValidationClass = "form-control form-control-sm is-invalid";
+    }
+
+    this.setState({passwordValidationClass: passwordValidationClass});
+  };
+
+  handleSubmitForm = (ev) => {
+    ev.preventDefault();
     this.props.authStore
       .register()
       .then(() => this.props.history.replace('/login'));
@@ -69,6 +101,17 @@ export default class Register extends React.Component {
                     value={values.password}
                     onChange={this.handlePasswordChange}
                     className="form-control form-control-sm"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <input
+                    id="passwordValidationField"
+                    type="password"
+                    placeholder="Double Check Password"
+                    value={this.state.passwordValidationField}
+                    onChange={this.handlePasswordCheckChange}
+                    className={this.state.passwordValidationClass}
                   />
                 </div>
 

@@ -12,8 +12,8 @@ export default class TaskForm extends React.Component {
   handleChangeNewTaskNotes = this.props.handleChangeNewTaskNotes;
   handleChangeNewTaskDuedate = this.props.handleChangeNewTaskDuedate;
 
-
   render() {
+    const dueDatePlaceholder = "Due Date: format " + this.props.dateformat;
     return (
       <div id="TaskForm">
         <form>
@@ -56,7 +56,7 @@ export default class TaskForm extends React.Component {
                 name="duedate"
                 id="duedate"
                 type="text"
-                placeholder="2020-01-01"
+                placeholder={dueDatePlaceholder}
                 value={this.props.taskDuedate}
                 onChange={this.handleChangeNewTaskDuedate}
                 className="form-control form-control-sm"
