@@ -20,7 +20,7 @@ export default class ListNameForm extends React.Component {
         <form>
           <div className="row">
             <div className="col">
-              <label htmlFor="listname">Add new list:</label>
+              <label htmlFor="listname">Add a new list:</label>
             </div>
           </div>
 

@@ -13,13 +13,13 @@ export default class TaskForm extends React.Component {
   handleChangeNewTaskDuedate = this.props.handleChangeNewTaskDuedate;
 
   render() {
-    const dueDatePlaceholder = "Due Date: format " + this.props.dateformat;
+    const dueDatePlaceholder = "Optional Due Date: format " + this.props.dateformat;
     return (
       <div id="TaskForm">
         <form>
           <div className="row">
             <div className="col">
-              <label htmlFor="taskname">Add new task:</label>
+              <label htmlFor="taskname">Add a new task:</label>
             </div>
           </div>
 
@@ -42,7 +42,7 @@ export default class TaskForm extends React.Component {
               <textarea
                 name="notes"
                 id="notes"
-                placeholder="Notes"
+                placeholder="Optional Notes"
                 value={this.props.taskNotes}
                 onChange={this.handleChangeNewTaskNotes}
                 className="form-control form-control-sm"
