@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import moment from "moment";
 
 /**
  * The individual row for the task table
@@ -8,6 +9,10 @@ import { inject, observer } from 'mobx-react';
 @observer
 export default class TaskList extends React.Component {
 
+  reference = moment();
+  today = null;
+  twoDaysAhead = null;
+  oneWeekAhead = null;
 
   handleChangeTaskName = this.props.handleChangeTaskName;
   handleSaveTask = this.props.handleSaveTask;
@@ -15,6 +20,27 @@ export default class TaskList extends React.Component {
   handleMarkTaskComplete = this.props.handleMarkTaskComplete;
   handleChangeTaskNotes = this.props.handleChangeTaskNotes;
   handleChangeTaskDuedate = this.props.handleChangeTaskDuedate;
+
+  constructor(props){
+    super(props);
+
+    console.log(this.today);
+    this.today = this.reference.clone().startOf('day');
+    this.twoDaysAhead = this.reference.clone().add(2, 'day').startOf('day');
+    this.oneWeekAhead = this.reference.clone().add(7, 'day').startOf('day');
+  }
+
+  isToday(momentDate){
+    return momentDate.isSame(this.today, 'd');
+  }
+
+  isTwoDaysComingOrLate(momentDate){
+    return (this.isToday(momentDate) || momentDate.isAfter(this.today)) && momentDate.isBefore(this.twoDaysAhead);
+  }
+
+  isAWeekAhead(momentDate){
+    return momentDate.isAfter(this.today) && momentDate.isBefore(this.oneWeekAhead);
+  }
 
   toggleEdit(taskId){
     this.props.listRegistryStore.editTask = taskId;
@@ -90,8 +116,20 @@ export default class TaskList extends React.Component {
       );
     }
     else {
+      let dateClass = "float-left";
+
+      if (task.duedate){
+        const momentForDueDate = moment(task.duedate);
+        if (this.isTwoDaysComingOrLate(momentForDueDate) && task.completed === false){
+          dateClass = "float-left text-danger";
+        }
+        else if (this.isAWeekAhead(momentForDueDate) && task.completed === false){
+          dateClass = "float-left due-date-upcoming";
+        }
+      }
+
       return (
-        <div className="float-left">{task.duedate}</div>
+        <div className={dateClass}>{task.duedate}</div>
       );
     }
   }
