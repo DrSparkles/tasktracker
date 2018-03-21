@@ -4,16 +4,16 @@
 
 import React from "react";
 import moment from "moment";
-
 import { inject, observer } from 'mobx-react';
 import ListNameForm from "../../components/ListNameForm";
 import ListNameSelect from "../../components/ListNameSelect";
 import TaskForm from "../../components/TaskForm";
 import TaskList from "../../components/TaskList";
-import SearchBox from "../SearchBox/SearchBox";
-import SearchedTaskList from "../SearchedTaskList/SearchedTaskList";
+import SearchBox from "../../components/SearchBox";
+import SearchedTaskList from "../../components/SearchedTaskList";
+import CompletedViewSelect from "../../components/CompletedViewSelect";
 
-@inject('commonStore', 'userStore', 'listRegistryStore')
+@inject('commonStore', 'userStore', 'listRegistryStore', 'interfaceStore')
 @observer
 export default class Home extends React.Component {
 
@@ -220,7 +220,7 @@ export default class Home extends React.Component {
 
   /**********************************
    *
-   * Search / filter functions
+   * Search / completed / filter functions
    *
    **********************************/
 
@@ -241,6 +241,14 @@ export default class Home extends React.Component {
    ev.preventDefault();
    this.props.listRegistryStore.loadCurrentList(ev.target.id);
    this.props.history.push("/link/" + ev.target.id);
+  };
+
+  /**
+   * Set the completed tasks view on select change
+   * @param ev
+   */
+  handleChangeCompletedViewBox = (ev) => {
+    this.props.interfaceStore.completedSelectValue = ev.target.value;
   };
 
   /********************************
@@ -315,6 +323,7 @@ export default class Home extends React.Component {
    */
   render(){
     const { isLoading, currentList, allLists, newListName, switchToList, searchFilter, filteredTasks } = this.props.listRegistryStore;
+    const { completedSelectValue } = this.props.interfaceStore;
     if (this.props.userStore.currentUser && !isLoading){
       return (
         <div id='Home'>
@@ -338,18 +347,29 @@ export default class Home extends React.Component {
               />
 
             </div>
+
             <div className="col">
               {this.renderNewTaskForm()}
             </div>
+
           </div>
 
           <div className="row mt-2">
+
             <div className="col">
               <SearchBox
                 searchFilter={searchFilter}
                 handleChangeSearchBox={this.handleChangeSearchBox}
               />
             </div>
+
+            <div className="col">
+              <CompletedViewSelect
+                handleChangeCompletedViewBox={this.handleChangeCompletedViewBox}
+                completedSelectValue={completedSelectValue}
+              />
+            </div>
+
           </div>
 
           <div className="row">

@@ -1,10 +1,8 @@
-import { Link } from 'react-router-dom';
-import ListErrors from '../ListErrors';
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 /**
- * Registration form for users
+ * The individual row for the task table
  */
 @inject('listRegistryStore')
 @observer

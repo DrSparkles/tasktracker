@@ -1,14 +1,12 @@
-import { Link } from 'react-router-dom';
-import ListErrors from '../ListErrors';
 import TaskRow from './TaskRow';
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 /**
- * Registration form for users
+ * Task List
  */
-@inject('listRegistryStore')
+@inject('listRegistryStore', 'interfaceStore')
 @observer
 export default class TaskList extends React.Component {
 
@@ -68,26 +66,33 @@ export default class TaskList extends React.Component {
 
     const { tasks } = this.props.currentList;
     const taskRows  = tasks.map((task) => {
-      return (
-        <TaskRow
-          handleSaveTask={this.handleSaveTask}
-          handleChangeTaskName={this.handleChangeTaskName}
-          handleChangeTaskNotes={this.handleChangeTaskNotes}
-          handleChangeTaskDuedate={this.handleChangeTaskDuedate}
-          handleMarkTaskComplete={this.handleMarkTaskComplete}
-          handleDeleteTask={this.handleDeleteTask}
-          key={task.taskId}
-          task={task}
-        />
-      );
+      if (this.props.interfaceStore.completedSelectValue === "showCompleted" || this.props.interfaceStore.completedSelectValue === "hideCompleted" && !task.completed){
+        return (
+          <TaskRow
+            handleSaveTask={this.handleSaveTask}
+            handleChangeTaskName={this.handleChangeTaskName}
+            handleChangeTaskNotes={this.handleChangeTaskNotes}
+            handleChangeTaskDuedate={this.handleChangeTaskDuedate}
+            handleMarkTaskComplete={this.handleMarkTaskComplete}
+            handleDeleteTask={this.handleDeleteTask}
+            key={task.taskId}
+            task={task}
+          />
+        );
+      }
+      else {
+        return null;
+      }
     });
 
+    // give a viable option for when the content is loading
     if (this.props.isLoadingLists) {
       return(
         <LoadingSpinner />
       );
     }
 
+    // otherwise show the list
     else {
       return (
         <div id="TaskList">

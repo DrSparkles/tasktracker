@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'mobx-react';
 import { HashRouter } from 'react-router-dom';
 
-import Layout from "./components/pages/Layout/Layout";
+import Layout from "./components/pages/Layout";
 
 import commonStore from './stores/commonStore';
 import authStore from './stores/authStore';
