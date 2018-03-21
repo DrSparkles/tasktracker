@@ -1,21 +1,25 @@
-@background-color: #193d5a;
-@content-color: #f2f0f0;
-@primary-accent-color: #760000;
+@background-color: #FFF;
+@form-background-color: #193d5a;
+@form-text-color: #FFF;
+@content-color: #FFF;
+@primary-accent-color: #193d5a;
 @secondary-accent-color: #ffad00;
+@tertiary-accent-color: #760000;
 @table-primary-background: #FFF;
 
 @warning-color: #E57E00;
 
 body {
-    background-color: @background-color;
+  background-color: @background-color;
+  height: 100%;
 }
 
 a {
-    color: @primary-accent-color;
-    &:hover {
-        color: @secondary-accent-color;
-        text-decoration: none;
-    }
+  color: @primary-accent-color;
+  &:hover {
+    color: @secondary-accent-color;
+    text-decoration: none;
+  }
 }
 
 h1, h2, h3, h4 {
@@ -30,17 +34,29 @@ th {
   color: @primary-accent-color;
 }
 
+#task-forms {
+  background-color: @form-background-color;
+  color: @form-text-color;
+  padding: 10px;
+}
+
+.app-container {
+  height: 100%;
+}
+
 .content {
   padding: 10px;
+  height: 100%;
 }
 
 .container {
   background-color: @content-color;
+  height: 100%;
 
 }
 
 .searched-list-names {
-  background-color: @background-color;
+  background-color: @tertiary-accent-color;
   a {
     padding: 0 0 0 5px;
     color: @content-color;
@@ -56,7 +72,7 @@ th {
 }
 
 .oi {
-    cursor: pointer;
+  cursor: pointer;
   color: @primary-accent-color;
 }
 

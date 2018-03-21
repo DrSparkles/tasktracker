@@ -343,65 +343,68 @@ export default class Home extends React.Component {
     if (this.props.userStore.currentUser && !isLoading){
       return (
         <div id='Home'>
+          <div className="container-fluid">
+            <div id="task-forms" className="row">
+              <div className="col">
 
-          <div className="row">
-            <div className="col">
+                <div className="row">
+                  <div className="col">
 
-              <ListNameSelect
-                currentListId={currentList.listId}
-                taskList={allLists}
-                handleChangeListSelect={this.handleChangeListSelect}
-              />
+                    <ListNameSelect
+                      currentListId={currentList.listId}
+                      taskList={allLists}
+                      handleChangeListSelect={this.handleChangeListSelect}
+                    />
 
-              <ListNameForm
-                newListName={newListName}
-                handleChangeNewListName={this.handleChangeNewListName}
-                handleSaveList={this.handleSaveList}
-                handleCangeSwitchToList={this.handleChangeSwitchToList}
-                switchToList={switchToList}
-                handleChangeSwitchToList={this.handleChangeSwitchToList}
-              />
+                    <ListNameForm
+                      newListName={newListName}
+                      handleChangeNewListName={this.handleChangeNewListName}
+                      handleSaveList={this.handleSaveList}
+                      handleCangeSwitchToList={this.handleChangeSwitchToList}
+                      switchToList={switchToList}
+                      handleChangeSwitchToList={this.handleChangeSwitchToList}
+                    />
 
+                  </div>
+
+                  <div className="col">
+                    {this.renderNewTaskForm()}
+                  </div>
+
+                </div>
+
+                <div className="row mt-2">
+
+                  <div className="col">
+                    <SearchBox
+                      searchFilter={searchFilter}
+                      handleChangeSearchBox={this.handleChangeSearchBox}
+                    />
+                  </div>
+
+                  <div className="col">
+                    <CompletedViewSelect
+                      handleChangeCompletedViewBox={this.handleChangeCompletedViewBox}
+                      completedSelectValue={completedSelectValue}
+                    />
+                  </div>
+
+                </div>
+
+                <div className="row">
+                  <div className="col">
+                    <SearchedTaskList
+                      handleFilteredItemClick={this.handleFilteredItemClick}
+                      searchFilter={searchFilter}
+                      filteredTasks={filteredTasks}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-
-            <div className="col">
-              {this.renderNewTaskForm()}
-            </div>
-
           </div>
-
-          <div className="row mt-2">
-
-            <div className="col">
-              <SearchBox
-                searchFilter={searchFilter}
-                handleChangeSearchBox={this.handleChangeSearchBox}
-              />
-            </div>
-
-            <div className="col">
-              <CompletedViewSelect
-                handleChangeCompletedViewBox={this.handleChangeCompletedViewBox}
-                completedSelectValue={completedSelectValue}
-              />
-            </div>
-
-          </div>
-
-          <div className="row">
-            <div className="col">
-              <SearchedTaskList
-                handleFilteredItemClick={this.handleFilteredItemClick}
-                searchFilter={searchFilter}
-                filteredTasks={filteredTasks}
-              />
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col">
-              {this.renderTaskList()}
-            </div>
+          <div className="container">
+            {this.renderTaskList()}
           </div>
 
         </div>

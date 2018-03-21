@@ -15,7 +15,7 @@ export function isToday(momentDate){
 }
 
 export function isTwoDaysComingOrLate(momentDate){
-  return (isToday(momentDate) || momentDate.isAfter(today)) && momentDate.isBefore(twoDaysAhead);
+  return momentDate.isBefore(twoDaysAhead);
 }
 
 export function isAWeekAhead(momentDate){
