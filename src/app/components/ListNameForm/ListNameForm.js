@@ -2,7 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 
 /**
- * List name form for saving and editing lists
+ * List form for saving new lists
  */
 @observer
 export default class ListNameForm extends React.Component {
@@ -16,7 +16,7 @@ export default class ListNameForm extends React.Component {
     const { newListName, switchToList } = this.props;
 
     return (
-      <div id="ListNameForm">
+      <div id="ListNameForm" className="mt-2">
         <form>
           <div className="row">
             <div className="col">

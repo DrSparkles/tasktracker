@@ -65,7 +65,7 @@ export default class Home extends React.Component {
    * @param ev
    */
   handleChangeSwitchToList = (ev) => {
-    this.props.listRegistryStore.switchToList = !this.props.listRegistryStore.switchToList;
+    this.props.interfaceStore.switchToList = !this.props.interfaceStore.switchToList;
   };
 
   /**
@@ -239,8 +239,18 @@ export default class Home extends React.Component {
    */
   handleFilteredItemClick = (ev) => {
    ev.preventDefault();
+   this.props.listRegistryStore.searchFilter = "";
    this.props.listRegistryStore.loadCurrentList(ev.target.id);
    this.props.history.push("/link/" + ev.target.id);
+  };
+
+  /**
+   * Set the global task sort direction and reload the list.
+   * @param direction
+   */
+  handleSortTasksClick = (direction) => {
+    this.props.interfaceStore.taskSortOrder = direction;
+    this.props.listRegistryStore.loadCurrentList(this.props.listRegistryStore.currentList.listId);
   };
 
   /**
@@ -295,6 +305,7 @@ export default class Home extends React.Component {
    */
   renderTaskList(){
     if (this.props.listRegistryStore.currentList.listId){
+      const taskSortOrder = this.props.interfaceStore.taskSortOrder;
       return(
         <TaskList
           isLoadingLists={this.props.listRegistryStore.isLoadingLists}
@@ -308,6 +319,9 @@ export default class Home extends React.Component {
           handleMarkTaskComplete={this.handleMarkTaskComplete}
           handleDeleteTask={this.handleDeleteTask}
           handleDeleteList={this.handleDeleteList}
+          handleSortTasksClick={this.handleSortTasksClick}
+          taskSortOrder={taskSortOrder}
+          completedSelectValue={this.props.interfaceStore.completedSelectValue}
           dateformat={this.props.commonStore.datetimeFormat}
         />
       );
@@ -322,8 +336,10 @@ export default class Home extends React.Component {
    * @returns {*}
    */
   render(){
-    const { isLoading, currentList, allLists, newListName, switchToList, searchFilter, filteredTasks } = this.props.listRegistryStore;
+    const { isLoading, currentList, allLists, newListName, searchFilter, filteredTasks } = this.props.listRegistryStore;
+    const { switchToList } = this.props.interfaceStore;
     const { completedSelectValue } = this.props.interfaceStore;
+
     if (this.props.userStore.currentUser && !isLoading){
       return (
         <div id='Home'>

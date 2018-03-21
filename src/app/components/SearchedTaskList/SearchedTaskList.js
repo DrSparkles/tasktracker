@@ -9,6 +9,11 @@ export default class SearchedTaskList extends React.Component {
 
   handleFilteredItemClick = this.props.handleFilteredItemClick;
 
+  /**
+   * Render the lists that have been searched
+   * @param linkId
+   * @param tasks
+   */
   renderSearchedListsTasks(linkId, tasks){
     return tasks.map((task) => {
       const url = "/list/" + linkId;

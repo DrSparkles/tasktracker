@@ -1,6 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import moment from "moment";
+import { isTwoDaysComingOrLate, isAWeekAhead } from '../../lib/dateManagement';
 
 /**
  * The individual row for the task table
@@ -9,11 +10,6 @@ import moment from "moment";
 @observer
 export default class TaskList extends React.Component {
 
-  reference = moment();
-  today = null;
-  twoDaysAhead = null;
-  oneWeekAhead = null;
-
   handleChangeTaskName = this.props.handleChangeTaskName;
   handleSaveTask = this.props.handleSaveTask;
   handleDeleteTask = this.props.handleDeleteTask;
@@ -21,32 +17,20 @@ export default class TaskList extends React.Component {
   handleChangeTaskNotes = this.props.handleChangeTaskNotes;
   handleChangeTaskDuedate = this.props.handleChangeTaskDuedate;
 
-  constructor(props){
-    super(props);
-
-    console.log(this.today);
-    this.today = this.reference.clone().startOf('day');
-    this.twoDaysAhead = this.reference.clone().add(2, 'day').startOf('day');
-    this.oneWeekAhead = this.reference.clone().add(7, 'day').startOf('day');
-  }
-
-  isToday(momentDate){
-    return momentDate.isSame(this.today, 'd');
-  }
-
-  isTwoDaysComingOrLate(momentDate){
-    return (this.isToday(momentDate) || momentDate.isAfter(this.today)) && momentDate.isBefore(this.twoDaysAhead);
-  }
-
-  isAWeekAhead(momentDate){
-    return momentDate.isAfter(this.today) && momentDate.isBefore(this.oneWeekAhead);
-  }
-
+  /**
+   * Toggle which task is being edited to show either the edit form or just display the content
+   * @param taskId
+   */
   toggleEdit(taskId){
     this.props.listRegistryStore.editTask = taskId;
     this.props.listRegistryStore.loadCurrentTask(taskId);
   }
 
+  /**
+   * Render the task name if a registry task is set, else the form
+   * @param task
+   * @returns {*}
+   */
   renderTaskNameOrInput(task){
 
     if (this.props.listRegistryStore.editTask !== undefined && this.props.listRegistryStore.editTask === task.taskId){
@@ -72,6 +56,11 @@ export default class TaskList extends React.Component {
     }
   }
 
+  /**
+   * Render the task notes if a registry task is set, else the form
+   * @param task
+   * @returns {*}
+   */
   renderTaskNotesOrInput(task){
 
     if (this.props.listRegistryStore.editTask !== undefined && this.props.listRegistryStore.editTask === task.taskId){
@@ -97,6 +86,11 @@ export default class TaskList extends React.Component {
     }
   }
 
+  /**
+   * Render the task due date if a registry task is set, else the form
+   * @param task
+   * @returns {*}
+   */
   renderTaskDuedateOrInput(task){
 
     if (this.props.listRegistryStore.editTask !== undefined && this.props.listRegistryStore.editTask === task.taskId){
@@ -116,15 +110,17 @@ export default class TaskList extends React.Component {
       );
     }
     else {
-      let dateClass = "float-left";
 
+      // set the correct class for the row given the date
+      let dateClass = "float-left";
       if (task.duedate){
+
         const momentForDueDate = moment(task.duedate);
-        if (this.isTwoDaysComingOrLate(momentForDueDate) && task.completed === false){
-          dateClass = "float-left text-danger";
+        if (isTwoDaysComingOrLate(momentForDueDate) && task.completed === false){
+          dateClass = "float-left text-danger font-weight-bold";
         }
-        else if (this.isAWeekAhead(momentForDueDate) && task.completed === false){
-          dateClass = "float-left due-date-upcoming";
+        else if (isAWeekAhead(momentForDueDate) && task.completed === false){
+          dateClass = "float-left due-date-upcoming font-weight-bold";
         }
       }
 
@@ -134,6 +130,11 @@ export default class TaskList extends React.Component {
     }
   }
 
+  /**
+   * Render the task edit and complete buttons, else the save button
+   * @param task
+   * @returns {*}
+   */
   renderEditDeleteControls(task){
     if (this.props.listRegistryStore.editTask === undefined && this.props.listRegistryStore.editTask !== task.taskId){
       return(
@@ -174,7 +175,7 @@ export default class TaskList extends React.Component {
         <td>
           {this.renderTaskDuedateOrInput(this.props.task)}
         </td>
-        <td>
+        <td className="text-center">
           <input
             name="markComplete"
             id="markComplete"

@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx';
+import { observable } from 'mobx';
 import Task from "./Task";
 
 export default class List {

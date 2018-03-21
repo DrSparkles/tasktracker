@@ -1,28 +1,66 @@
 import { observable, action, computed, toJS } from 'mobx';
 import List from "./dataStores/List";
-import Task from "./dataStores/Task";
+import interfaceStore from "./interfaceStore";
 import agent from '../agent';
+import moment from 'moment';
 
 /**
  * App state for task lists and their various tasks
  */
 class ListRegistryStore {
 
+  /**
+   * State of loading while fetching data from the db
+   * @type {boolean}
+   */
   @observable isLoadingLists = false;
+
+  /**
+   * State of the process during save
+   * @type {boolean}
+   */
   @observable isSavingList = false;
+
+  /**
+   * State while saving a task
+   * @type {boolean}
+   */
   @observable isSavingTask = false;
 
+  /**
+   * The registry of all the lists
+   * @type {ObservableMap<any>}
+   */
   @observable listRegistry = observable.map();
 
+  /**
+   * A container for the list id while editing; it should be undefined if not editing, else the listId
+   * of the list being edited
+   * @type {undefined | listId}
+   */
   @observable editList = undefined;
+
+  /**
+   * A container for the task id while editing; it should be undefined if not editing, else the taskId
+   * of the task being edited
+   * @type {undefined | taskId}
+   */
   @observable editTask = undefined;
 
+  /**
+   * The current list being viewed
+   * @type {{listId: string, listname: string, tasks: Array}}
+   */
   @observable currentList = {
     listId: "",
     listname: "",
     tasks: []
   };
 
+  /**
+   * The current task being processed, mostly for editing a task
+   * @type {{taskId: string, taskname: string, notes: string, duedate: string, completed: boolean}}
+   */
   @observable currentTask = {
     taskId: "",
     taskname: "",
@@ -31,20 +69,53 @@ class ListRegistryStore {
     completed: false
   };
 
+  /**
+   * A field to manage a new list name
+   * @type {string}
+   */
   @observable newListName = "";
-  @observable switchToList = true;
+
+  /**
+   * The returned new listId from a save
+   * @type {undefined}
+   */
   @observable newListId = undefined;
 
+  /**
+   * A field to manage a new task name
+   * @type {string}
+   */
   @observable newTaskName = "";
+
+  /**
+   * A field to manage a new task note
+   * @type {string}
+   */
   @observable newTaskNotes = "";
+
+  /**
+   * A field to manage a new task due date
+   * @type {string}
+   */
   @observable newTaskDueDate = "";
+
+  /**
+   * A field to manage if a task is completed or not
+   * @type {boolean}
+   */
   @observable newTaskCompleted = false;
 
-  @observable doAddNewList = false;
-  @observable doAddNewTask = false;
-
+  /**
+   * A field to manage searching tasks in lists.  It will either be a blank string because
+   * nothing is being searched, or contain the string being searched
+   * @type {string}
+   */
   @observable searchFilter = "";
 
+  /**
+   * Fetch the values of the registry
+   * @returns {*|(V[] & Iterator<V>)}
+   */
   @computed get allLists(){
     return this.listRegistry.values();
   }
@@ -72,6 +143,57 @@ class ListRegistryStore {
     return result;
   }
 
+  /**
+   * Given a sort type, taskname ascending or descending and duedate ascending or descending, process the tasks
+   * of the current list to be displayed properly.
+   * @param list
+   * @returns {*}
+   */
+  @action sortedCurrentTasks(list){
+
+    let sorted = [];
+    if (interfaceStore.taskSortOrder === "taskname-asc" || interfaceStore.taskSortOrder === "taskname-desc"){
+      const sortOrder = (interfaceStore.taskSortOrder === "taskname-asc") ? "asc" : "desc";
+      sorted = list.tasks.sort(function(a, b) {
+        const nameA = a.taskname.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.taskname.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return (sortOrder === "asc") ? -1 : 1;
+        }
+        if (nameA > nameB) {
+          return (sortOrder === "asc") ? 1 : -1;
+        }
+
+        // names must be equal
+        return 0;
+      });
+    }
+    else if (interfaceStore.taskSortOrder === "duedate-asc" || interfaceStore.taskSortOrder === "duedate-desc"){
+      const sortOrder = (interfaceStore.taskSortOrder === "duedate-asc") ? "asc" : "desc";
+      sorted = list.tasks.sort(function(a, b) {
+        const dateA = moment(a.duedate);
+        const dateB = moment(b.duedate);
+        if (dateA.isBefore(dateB)) {
+          return (sortOrder === "asc") ? -1 : 1;
+        }
+        if (dateA.isAfter(dateB)) {
+          return (sortOrder === "asc") ? 1 : -1;
+        }
+
+        // dates must be equal
+        return 0;
+      });
+
+    }
+
+    list.tasks = sorted;
+    return list;
+  }
+
+  /**
+   * Fetch the lists form the database and load the registry
+   * @returns {Promise<any>}
+   */
   @action loadLists(){
     this.isLoading = true;
     return agent.List
@@ -98,6 +220,11 @@ class ListRegistryStore {
       }));
   }
 
+  /**
+   * Given a listId, fetch the list being processed form the registry
+   * @param listId
+   * @returns {{listId: string, listname: string, tasks: Array}}
+   */
   @action loadCurrentList(listId){
     if (!listId){
       this.currentList = {
@@ -107,11 +234,16 @@ class ListRegistryStore {
       };
     }
     else {
-      this.currentList = this.listRegistry.get(listId) ;
+      this.currentList = this.sortedCurrentTasks(this.listRegistry.get(listId));
     }
     return this.currentList;
   }
 
+  /**
+   * Given a taskId, load the task currently being processed from the currentList
+   * @param taskId
+   * @returns {{taskId: string, taskname: string, notes: string, duedate: string, completed: boolean}}
+   */
   @action loadCurrentTask(taskId){
 
     // clear task as needed if the task id comes in blank
@@ -138,6 +270,11 @@ class ListRegistryStore {
     return this.currentTask;
   }
 
+  /**
+   * A universal save function that hinges on whether or not there is a new list name.  If that is not a
+   * blank string, save a new list, else edit an existing list
+   * @returns {*}
+   */
   @action saveList(){
     if (this.newListName !== ""){
       return this.createNewList();
@@ -147,6 +284,10 @@ class ListRegistryStore {
     }
   }
 
+  /**
+   * Edit an existing list, saving data to the database
+   * @returns {Promise<any>}
+   */
   @action editExitingList(){
 
     this.isSavingList = true;
@@ -169,6 +310,10 @@ class ListRegistryStore {
       }));
   }
 
+  /**
+   * Create a new list, saving to teh database
+   * @returns {Promise<any>}
+   */
   @action createNewList(){
 
     this.isSavingList = true;
@@ -190,7 +335,7 @@ class ListRegistryStore {
             // otherwise, set the list id to the current list id
             let listId = this.currentList.listId;
 
-            if (this.switchToList){
+            if (interfaceStore.switchToList){
               listId = list.result._id;
               this.newListId = listId;
             }
@@ -209,6 +354,11 @@ class ListRegistryStore {
       }));
   }
 
+  /**
+   * A universal save function that hinges on whether or not there is a new task name.  If that is not a
+   * blank string, save a new task, else edit an existing task
+   * @returns {*}
+   */
   @action saveTask(){
     if (this.newTaskName !== ""){
       return this.createNewTask();
@@ -218,6 +368,10 @@ class ListRegistryStore {
     }
   }
 
+  /**
+   * Create a new task, saving to database
+   * @returns {Promise<any>}
+   */
   @action createNewTask(){
 
     const saveData = {
@@ -246,6 +400,10 @@ class ListRegistryStore {
       }));
   }
 
+  /**
+   * Edit an existing task, saving to database
+   * @returns {Promise<any>}
+   */
   @action editExistingTask(){
     const saveData = {
       taskname: this.currentTask.taskname,
@@ -271,6 +429,11 @@ class ListRegistryStore {
       }));
   }
 
+  /**
+   * Delete a list, removing the list from both the registry and the database
+   * @param listId
+   * @returns {Promise<any>}
+   */
   @action deleteList(listId){
     return agent.List
       .deleteEntry(listId)
@@ -287,6 +450,12 @@ class ListRegistryStore {
       }));
   }
 
+  /**
+   * Delete a task, removing the task from both the currentList and the database
+   * @param listId
+   * @param taskId
+   * @returns {Promise<any>}
+   */
   @action deleteTask(listId, taskId){
     return agent.Task
       .deleteEntry(listId, taskId)
@@ -317,10 +486,16 @@ class ListRegistryStore {
       }));
   }
 
+  /**
+   * Reset the new list field
+   */
   @action resetNewList(){
     this.newListName = "";
   }
 
+  /**
+   * Reset the new task fields
+   */
   @action resetNewTask(){
     this.newTaskName = "";
     this.newTaskNotes = "";
@@ -328,6 +503,9 @@ class ListRegistryStore {
     this.newTaskCompleted = false;
   }
 
+  /**
+   * Reset the current list
+   */
   @action resetList(){
     this.currentList = {
       listId: "",
@@ -336,6 +514,9 @@ class ListRegistryStore {
     };
   }
 
+  /**
+   * Reset the current task
+   */
   @action resetTask(){
     this.currentTask = {
       taskId: "",

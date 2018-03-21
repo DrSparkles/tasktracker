@@ -6,9 +6,13 @@ import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 /**
  * Task List
  */
-@inject('listRegistryStore', 'interfaceStore')
+@inject('listRegistryStore')
 @observer
 export default class TaskList extends React.Component {
+
+  /**
+   * Load functions from parent class
+   */
 
   handleSaveList = this.props.handleSaveList;
   handleChangeListName = this.props.handleChangeListName;
@@ -21,10 +25,24 @@ export default class TaskList extends React.Component {
   handleMarkTaskComplete = this.props.handleMarkTaskComplete;
   handleSaveTask = this.props.handleSaveTask;
 
+  handleSortTasksClick = this.props.handleSortTasksClick;
+
+  /**
+   * Toggle the edit view for the list name
+   * @param listId
+   */
   toggleEdit(listId){
     this.props.listRegistryStore.editList = listId;
   }
 
+  /**
+   * Render methods
+   */
+
+  /**
+   * Render the view to show the list name or the edit field for the list name
+   * @returns {*}
+   */
   renderListNameOrEditField(){
     if (this.props.listRegistryStore.editList){
       return (
@@ -63,10 +81,10 @@ export default class TaskList extends React.Component {
   }
 
   render() {
-
+    const { completedSelectValue } = this.props;
     const { tasks } = this.props.currentList;
     const taskRows  = tasks.map((task) => {
-      if (this.props.interfaceStore.completedSelectValue === "showCompleted" || this.props.interfaceStore.completedSelectValue === "hideCompleted" && !task.completed){
+      if (completedSelectValue === "showCompleted" || completedSelectValue === "hideCompleted" && !task.completed){
         return (
           <TaskRow
             handleSaveTask={this.handleSaveTask}
@@ -94,16 +112,25 @@ export default class TaskList extends React.Component {
 
     // otherwise show the list
     else {
+
       return (
         <div id="TaskList">
           {this.renderListNameOrEditField()}
           <table className="table table-sm table-striped mt-2">
             <thead>
               <tr>
-                <th>Task</th>
+                <th>
+                  Task
+                  <span className="oi oi-caret-top ml-2" title="Sort Asc" aria-hidden="true" onClick={this.handleSortTasksClick.bind(this, "taskname-asc")} />
+                  <span className="oi oi-caret-bottom" title="Sort Desc" aria-hidden="true" onClick={this.handleSortTasksClick.bind(this, "taskname-desc")} />
+                </th>
                 <th>Notes</th>
-                <th>Due Date</th>
-                <th>Complete?</th>
+                <th>
+                  Due Date
+                  <span className="oi oi-caret-top ml-2" title="Sort Asc" aria-hidden="true" onClick={this.handleSortTasksClick.bind(this, "duedate-asc")} />
+                  <span className="oi oi-caret-bottom" title="Sort Desc" aria-hidden="true" onClick={this.handleSortTasksClick.bind(this, "duedate-desc")} />
+                </th>
+                <th className="text-center">Complete?</th>
                 <th>&nbsp;</th>
               </tr>
             </thead>
