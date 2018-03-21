@@ -1,20 +1,11 @@
-import { Link } from 'react-router-dom';
-import ListErrors from '../ListErrors';
 import React from 'react';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 
 /**
- * Registration form for users
+ * Select box to choose the list to view
  */
 @observer
 export default class ListNameSelect extends React.Component {
-
-  /**
-   * Clear the user fields when the form is done
-   */
-  componentWillUnmount() {
-
-  }
 
   handleChangeListSelect = this.props.handleChangeListSelect;
 
