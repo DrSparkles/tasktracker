@@ -9,7 +9,7 @@ class CommonStore {
    * Application name
    * @type {string}
    */
-  @observable appName = 'Task Manager';
+  @observable appName = 'Task Tracker';
 
   /**
    * User logged in token
