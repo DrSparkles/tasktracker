@@ -9,12 +9,14 @@ import commonStore from './stores/commonStore';
 import authStore from './stores/authStore';
 import userStore from './stores/userStore';
 import listRegistryStore from './stores/listRegistryStore';
+import interfaceStore from './stores/interfaceStore';
 
 const stores = {
   commonStore,
   authStore,
   userStore,
   listRegistryStore,
+  interfaceStore
 };
 
 const app = document.getElementById("app-container");
