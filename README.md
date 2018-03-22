@@ -27,6 +27,7 @@ The server is included, along with all the necessary end points (described below
 by token based auth.
 
 ## Planned improvements
+
 There are a few things that I would like to add in time:
 
 1. Some forms do not give adequate notice if the form requirements are not met before submitting.  However, the forms do
@@ -36,7 +37,39 @@ There are a few things that I would like to add in time:
     have strange requirements, or have other issues), and have not yet simply made my own.  The string based date entry 
     is prone to user error, but is serviceable for now.
     
+## General design decisions
+
+All core "pages" of the site, in this case register, sign in, and the core home page are loaded through separate files (under 
+`src/app/components/pages`).  Where state is changed, the parent component (such as the Home component)  
+handles declaring the core functions, passed through to sub-components as properties.  This does make for busier 
+parent component files, but allows the child components to be more flexible and composable.  
+
+Similarly, MobX allows state management through dependency injection, so state stores behave as passed in props.  
+
+The goal is to have components be responsible for simply displaying their data as much as possible, and to decouple them from 
+interacting deeply with complex state concerns.  This has drawbacks - as I mentioned, it means the parent component is busier,
+housing many of the functions that it's child components rely on.  Child components end up needing more passed in props, but clear 
+function names should help identify what's going on.
+
+There are various benefits of doing this; testing becomes easier as one can utilize the child components with whatever data 
+is wanted, including state stores (for example, a list of tasks can be passed in easily).  Most components will also be 
+simpler, receiving a series of functions and mostly being responsible only for managing their rendering.  Updating the functions 
+that run the child components can be managed all in one place, in the parent component file, and can be viewed and edited 
+together as needed.  This certainly isn't the only way to organize the code, but for a small, tightly focused site like this
+worked well.
+
+Components are primarily housed in individual folders using an index file that simply exports the primary component.  This 
+simplifies and clarifies importing files (allowing a cleaner `import` by just referencing the folder name), 
+and the folders leave room to expand the components as needed with custom style sheets
+and sub components.  Again this has pros and cons; for simple components, exporting through the index file adds a layer of 
+complexity, but it's a small amount of pre-planning to allow for potential future expansion.  I feel the pros outweigh any risk
+of pre-optimization.    
+
+Components are wrapped in a div that's given an ID with (usually) the name of the component, so looking at the final rendered HTML 
+source has helpful markers for what content belongs to what component. 
+
 # API endpoints
+
 The included server also has all necessary end points to manage the content.  The are as follows:
 
 ## Authentication
@@ -54,6 +87,7 @@ The included server also has all necessary end points to manage the content.  Th
 4. PUT `/api/lists/:listId`: Update a list
 
 ## Task Management
+
 1. POST `/api/lists/:listId/tasks`: Create new task in a specific list
 2. GET `/api/lists/:listId/tasks`: Get a user's tasks for a specific list
 3. GET `/api/lists/:listId/tasks/:taskId`: Return a specific task
@@ -63,6 +97,7 @@ The included server also has all necessary end points to manage the content.  Th
 # Dev and site management
 
 ## Getting Started
+
 To get a local environment up and running, install this repo locally and run `npm install`.  To run the development 
 environment simply run `npm run dev` on the command line from the root directory where you have installed the software.
 
@@ -99,6 +134,7 @@ Similarly, hashing of passwords is configured through `src/server/config/auth.co
 ensure proper security.
 
 ### Basic structure
+
 Server code is handled under `src/server`, and front end code under `src/app`.  
 
 To adjust server settings, look under `src/server/config` or `src/server/index.js`, the entry point to the server code.
