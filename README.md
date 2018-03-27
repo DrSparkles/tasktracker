@@ -121,9 +121,11 @@ These include:
 3. `build:server`: compile the server through babel
 4. `build:client`: run webpack on the code
 5. `build`: run webpack and babel
-6. `dev`: run the dev server
+6. `dev`: run the dev server; this sets the NODE_EVN to development via a Windows format... if it is not registering or erroring on other systems,
+    remove the "set" from this command (it looks like this: `set NODE_ENV=development`; just remove the word set)
 7. `start`: run the production server code at `dist/server/index.js`
 8. `deploy`: run the production build and server start commands `build` and `start`
+9. `tests-server`: build the server code and run the tests
 
 To run any of these scripts, run `npm run SCRIPTNAME`.  For example, `npm run dev` or `npm run start`.  Most of these scripts will not be used 
 for day to day development.
@@ -143,7 +145,10 @@ Front end code is handled under `src/app`, with it's entry point at `src/app/app
 
 ## Running the tests
 
-Tests are pending.  They will be set up with Mocha and Storybook, and will test both the server and front end code.
+Tests have been written for core server functionality, and can be run on the command line via `npm run tests-server`. 
+They use Mocha and Chai's Should library.
+
+That command will first build the server code to catch any changes that have been made, then run all the tests.
 
 ## Deployment
 
