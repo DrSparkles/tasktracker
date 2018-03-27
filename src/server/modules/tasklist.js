@@ -19,6 +19,15 @@ class TaskList {
    * @param cb
    */
   createNew(userId, listValues, cb){
+
+    if (userId === undefined || userId === ""){
+      return returnSimpleError("Must have a user id to create a new list.", 400, cb);
+    }
+
+    if (listValues.listname === undefined || listValues.listname === ""){
+      return returnSimpleError("Must have a list name to create a new list.", 400, cb);
+    }
+
     const { listname } = listValues;
     const userObjectId = getId(userId);
 
@@ -28,6 +37,19 @@ class TaskList {
       tasks: []
     };
     this.task_collection.insert(listQuery, (err, doc) => {
+      if (err) return returnSimpleError(err, 400, cb);
+      return returnSimpleResult(err, doc, cb);
+    });
+  }
+
+  /**
+   * This is for testing
+   * @param userId
+   * @param cb
+   * @returns {*}
+   */
+  getAllLists(cb){
+    this.task_collection.find({}, (err, doc) => {
       if (err) return returnSimpleError(err, 400, cb);
       return returnSimpleResult(err, doc, cb);
     });
@@ -64,6 +86,10 @@ class TaskList {
   updateList(listId, userId, listData, cb){
     if (listId === undefined || listId === ""){
       return returnSimpleError("Must have an id to update an entry.", 400, cb);
+    }
+
+    if (listData.listname === undefined || listData.listname === ""){
+      return returnSimpleError("Must have a list name to update an entry.", 400, cb);
     }
 
     const query = {_id: getId(listId)};

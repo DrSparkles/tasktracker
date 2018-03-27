@@ -21,6 +21,29 @@ class Tasklist {
    */
   createNew(listId, taskValues, cb){
 
+    // validation...
+    const validationErrors = [];
+    if (taskValues.taskname === undefined || taskValues.taskname === ""){
+      validationErrors.push("Must have a task name to create a new entry.");
+    }
+
+    if (taskValues.duedate === undefined){
+      validationErrors.push("Must have a task duedate field in the task, even if blank, to create a new entry.");
+    }
+
+    if (taskValues.notes === undefined){
+      validationErrors.push("Must have a task notes field in the task, even if blank, to create a new entry.");
+    }
+
+    if (taskValues.completed === undefined){
+      validationErrors.push("Must have a task completed field in the task, even if blank, to create a new entry.");
+    }
+
+    // error on out validation problems
+    if (validationErrors.length){
+      return returnSimpleError(validationErrors, 400, cb);
+    }
+
     taskValues._id = getId();
 
     const listObjectId = getId(listId);
@@ -93,8 +116,32 @@ class Tasklist {
    * @returns {*}
    */
   updateTask(taskId, taskData, cb){
+
     if (taskId === undefined || taskId === ""){
       return returnSimpleError("Must have an id to update an entry.", 400, cb);
+    }
+
+    // validation...
+    const validationErrors = [];
+    if (taskData.taskname === undefined || taskData.taskname === ""){
+      validationErrors.push("Must have a task name to create a new entry.");
+    }
+
+    if (taskData.duedate === undefined){
+      validationErrors.push("Must have a task duedate field in the task, even if blank, to create a new entry.");
+    }
+
+    if (taskData.notes === undefined){
+      validationErrors.push("Must have a task notes field in the task, even if blank, to create a new entry.");
+    }
+
+    if (taskData.completed === undefined){
+      validationErrors.push("Must have a task completed field in the task, even if blank, to create a new entry.");
+    }
+
+    // error on out validation problems
+    if (validationErrors.length){
+      return returnSimpleError(validationErrors, 400, cb);
     }
 
     const taskObjectId = getId(taskId);
@@ -117,9 +164,14 @@ class Tasklist {
    * @returns {*}
    */
   deleteTask(listId, taskId, cb){
-    // if no userId error out
+    // if no taskId error out
     if (taskId === undefined || taskId === ""){
       return returnSimpleError("Must have a task id to delete the entries.", 400, cb);
+    }
+
+    // if no listId error out
+    if (listId === undefined || listId === ""){
+      return returnSimpleError("Must have a list id to delete the entries.", 400, cb);
     }
 
     // else return our data
